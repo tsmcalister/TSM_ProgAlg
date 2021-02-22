@@ -14,10 +14,12 @@ int main() {
 	BankAccount account;				// synchronized bank account
 	double unsynchronizedAccount = 0;	// unsychronized bank account
 	thread t[nThreads];					// thread pool
+	int thread_number = 0;
 
 	// parallel task
-	auto task = [nRuns,&account,&mtx,&unsynchronizedAccount] {
-		srand((unsigned int)hash<thread::id>()(this_thread::get_id()));	// ensures that all threads have a different seed for the random number generator
+	auto task = [thread_number, nRuns,&account,&mtx,&unsynchronizedAccount] {
+		// srand((unsigned int)hash<thread::id>()(this_thread::get_id()));	// ensures that all threads have a different seed for the random number generator
+		srand(thread_number);	// ensures that all threads have a different seed for the random number generator
 
 		for (int i = 0; i < nRuns; i++) {
 			if (i & 1) {
@@ -43,6 +45,7 @@ int main() {
 	// start threads
 	for (int i = 0; i < nThreads; i++) {
 		t[i] = thread(task);	// thread uses move-semantics: t[i] will run the task and the temporary thread will immediately finish
+		thread_number++;
 	}
 
 	// join threads: main thread waits for parallel threads
