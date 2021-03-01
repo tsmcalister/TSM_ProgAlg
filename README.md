@@ -1,4 +1,11 @@
 # TSM_ProgAlg
 
-This repo contains solutions to the exercises for the MSE module TSM_ProgAlg
-(Parallel and distributed computing)
+# compiler
+
+use g++ version > 9
+
+# linking to freeimage
+
+Compile freeimage from source and then copy the `.a` files to `/usr/lib/`
+
+Then compile using `-lfreeimageplus -static` (This doesn't cover the header files) 

@@ -27,9 +27,8 @@ static int64_t sumSerial(const int arr[], const int n) {
 static int64_t sumPar1(const int arr[], const int n) {
 	int64_t sum = 0;
 
-#pragma omp parallel for default(none) shared(sum)
+#pragma omp parallel for default(none) shared(arr, n) reduction(+: sum)
 	for (int i = 0; i < n; i++) {
-		// TODO
 		sum += arr[i];
 	}
 	return sum;
@@ -37,32 +36,51 @@ static int64_t sumPar1(const int arr[], const int n) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 static int64_t sumPar2(const int arr[], const int n) {
-	// TODO
-	return 0;
+	int64_t sum = 0;
+
+#pragma omp parallel for reduction(+: sum)
+	for (int i = 0; i < n; i++) {
+		sum += arr[i];
+	}
+	return sum;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 static int64_t sumPar3(const int arr[], const int n) {
-	// TODO
-	return 0;
+	int64_t sum = 0;
+
+#pragma omp parallel for default(shared) reduction(+: sum)
+	for (int i = 0; i < n; i++) {
+		sum += arr[i];
+	}
+	return sum;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 static int64_t sumPar4(const int arr[], const int n) {
-	// TODO
-	return 0;
+	int64_t sum = 0;
+
+#pragma omp parallel for default(shared) reduction(+: sum) schedule(dynamic)
+	for (int i = 0; i < n; i++) {
+		sum += arr[i];
+	}
+	return sum;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 static int64_t sumPar5(const int arr[], const int n) {
-	// TODO
 	return 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 static int64_t sumPar6(const int arr[], const int n) {
-	// TODO
-	return 0;
+	int64_t sum = 0;
+
+#pragma omp parallel for num_threads(1) reduction(+: sum) schedule(guided)
+	for (int i = 0; i < n; i++) {
+		sum += arr[i];
+	}
+	return sum;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -85,43 +103,43 @@ void summation() {
 	sw.Start();
 	int64_t sumS = sumSerial(arr, N);
 	sw.Stop();
-	cout << "Sequential:                    " << sumS << " in " << sw.GetElapsedTimeMilliseconds() << " ms" << endl;
+	cout << "Sequential:              sumS: " << sumS << " in " << sw.GetElapsedTimeMilliseconds() << " ms" << endl;
 	cout << boolalpha << "The two operations produce the same results: " << (sumS == sum0) << endl << endl;
 
 	sw.Start();
 	int64_t sum1 = sumPar1(arr, N);
 	sw.Stop();
-	cout << "                               " << sum1 << " in " << sw.GetElapsedTimeMilliseconds() << " ms" << endl;
+	cout << "                         sum1: " << sum1 << " in " << sw.GetElapsedTimeMilliseconds() << " ms" << endl;
 	cout << boolalpha << "The two operations produce the same results: " << (sum1 == sum0) << endl << endl;
 
 	sw.Start();
 	int64_t sum2 = sumPar2(arr, N);
 	sw.Stop();
-	cout << "                               " << sum2 << " in " << sw.GetElapsedTimeMilliseconds() << " ms" << endl;
+	cout << "                         sum2: " << sum2 << " in " << sw.GetElapsedTimeMilliseconds() << " ms" << endl;
 	cout << boolalpha << "The two operations produce the same results: " << (sum2 == sum0) << endl << endl;
 
 	sw.Start();
 	int64_t sum3 = sumPar3(arr, N);
 	sw.Stop();
-	cout << "                               " << sum3 << " in " << sw.GetElapsedTimeMilliseconds() << " ms" << endl;
+	cout << "                         sum3: " << sum3 << " in " << sw.GetElapsedTimeMilliseconds() << " ms" << endl;
 	cout << boolalpha << "The two operations produce the same results: " << (sum3 == sum0) << endl << endl;
 
 	sw.Start();
 	int64_t sum4 = sumPar4(arr, N);
 	sw.Stop();
-	cout << "                               " << sum4 << " in " << sw.GetElapsedTimeMilliseconds() << " ms" << endl;
+	cout << "                         sum4: " << sum4 << " in " << sw.GetElapsedTimeMilliseconds() << " ms" << endl;
 	cout << boolalpha << "The two operations produce the same results: " << (sum4 == sum0) << endl << endl;
 
 	sw.Start();
 	int64_t sum5 = sumPar5(arr, N);
 	sw.Stop();
-	cout << "                               " << sum5 << " in " << sw.GetElapsedTimeMilliseconds() << " ms" << endl;
+	cout << "                         sum5: " << sum5 << " in " << sw.GetElapsedTimeMilliseconds() << " ms" << endl;
 	cout << boolalpha << "The two operations produce the same results: " << (sum5 == sum0) << endl << endl;
 
 	sw.Start();
 	int64_t sum6 = sumPar6(arr, N);
 	sw.Stop();
-	cout << "                               " << sum6 << " in " << sw.GetElapsedTimeMilliseconds() << " ms" << endl;
+	cout << "                         sum6: " << sum6 << " in " << sw.GetElapsedTimeMilliseconds() << " ms" << endl;
 	cout << boolalpha << "The two operations produce the same results: " << (sum6 == sum0) << endl << endl;
 
 	delete[] arr;
