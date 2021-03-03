@@ -3,7 +3,7 @@
 #include <cassert>
 #include <iomanip>
 #include <cmath>
-#include "FreeImagePlus.h"
+#include <FreeImagePlus.h>
 #include "Stopwatch.h"
 
 using namespace std;

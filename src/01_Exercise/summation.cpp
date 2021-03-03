@@ -49,7 +49,7 @@ static int64_t sumPar2(const int arr[], const int n) {
 static int64_t sumPar3(const int arr[], const int n) {
 	int64_t sum = 0;
 
-#pragma omp parallel for default(shared) reduction(+: sum)
+#pragma omp parallel for default(shared) reduction(+: sum) schedule(static, 100)
 	for (int i = 0; i < n; i++) {
 		sum += arr[i];
 	}
@@ -69,7 +69,13 @@ static int64_t sumPar4(const int arr[], const int n) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 static int64_t sumPar5(const int arr[], const int n) {
-	return 0;
+	int a[] = {0, n};
+	int64_t sum = 0;
+	for_each(std::execution::par, begin(a), end(a), [&](int i){
+		sum+=i;
+	});
+
+	return sum;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
